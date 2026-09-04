@@ -1,4 +1,4 @@
-# Hi, I'm Muhammad Usman 👋
+# Hi, I'm Muhammad Usman — known online as usmanwith1s.👋
 
 Software Engineering student focused on building practical software, clean interfaces, and interactive experiences.
 
@@ -31,11 +31,11 @@ Software Engineering student focused on building practical software, clean inter
 ## Featured Projects
 
 Projects will be added here as I publish them on GitHub.
-
 ## Connect With Me
 
-* Portfolio: Coming soon
-* LinkedIn: Coming soon
+- 🌐 Portfolio: https://usmanwith1s.github.io/
+- 💼 LinkedIn: https://www.linkedin.com/in/muhammad-usman-20b6a03aa
+- 📷 Instagram: @usmanwith1s
 
 ---
 
