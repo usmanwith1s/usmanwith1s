@@ -28,9 +28,19 @@ Software Engineering student focused on building practical software, clean inter
 * Netlify
 * CircuitMaker
 
+
+
 ## Featured Projects
 
-Projects will be added here as I publish them on GitHub.
+### 🎮 Number Pattern Game
+A Java Swing number pattern game with authentication, scoring, and file-based data storage.
+
+[View Repository](https://github.com/usmanwith1s/Number-Pattern-Game)
+
+### 🔐 Password Challenge Game
+An interactive Java Swing challenge game featuring progressive rules, validation, hints, lives, and multiple challenge states.
+
+[View Repository](https://github.com/usmanwith1s/Password-Challenge-Game)
 ## Connect With Me
 
 - 🌐 Portfolio: https://usmanwith1s.github.io/
