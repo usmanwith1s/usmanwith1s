@@ -1,13 +1,8 @@
 <div align="center">
 
-<img src="./assets/profile-reveal.png" width="320">
+<img src="./assets/profile-reveal.png" width="300">
 
-</div>
-<div align="center">
-
-<img src="./assets/profile-reveal.gif" width="320">
-
-<br>
+<br><br>
 
 # MUHAMMAD USMAN
 
@@ -17,8 +12,20 @@
 
 <br>
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=google-chrome&logoColor=9cff00)](https://usmanwith1s.github.io/)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-000000?style=for-the-badge&logo=linkedin&logoColor=9cff00)](https://www.linkedin.com/in/muhammad-usman-20b6a03aa)
-[![GitHub](https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=9cff00)](https://github.com/usmanwith1s)
+> Building things, breaking things, and learning how they work.
+
+<br>
+
+<a href="https://usmanwith1s.github.io/">
+  <img src="https://img.shields.io/badge/🌐%20PORTFOLIO-000000?style=for-the-badge&labelColor=000000&color=9cff00" alt="Portfolio">
+</a>
+&nbsp;
+<a href="https://www.linkedin.com/in/muhammad-usman-20b6a03aa">
+  <img src="https://img.shields.io/badge/💼%20LINKEDIN-000000?style=for-the-badge&labelColor=000000&color=9cff00" alt="LinkedIn">
+</a>
+&nbsp;
+<a href="https://github.com/usmanwith1s">
+  <img src="https://img.shields.io/badge/🐙%20GITHUB-000000?style=for-the-badge&labelColor=000000&color=9cff00" alt="GitHub">
+</a>
 
 </div>
