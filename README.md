@@ -14,12 +14,14 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 <p>
 <div align="center">
 
-<table>
+<div align="center">
+
+<table border="0" cellspacing="0" cellpadding="4">
 <tr>
 
 <td>
 <a href="https://usmanwith1s.github.io/">
-<img src="https://img.shields.io/badge/PORTFOLIO-111111?style=for-the-badge&logo=googlechrome&logoColor=9cff00" alt="Portfolio">
+<img src="https://img.shields.io/badge/PORTFOLIO-E34F26?style=for-the-badge&logo=googlechrome&logoColor=ffffff" alt="Portfolio">
 </a>
 </td>
 
@@ -39,6 +41,7 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 </table>
 
 </div>
+
 </p>
 </p>
 <br>
