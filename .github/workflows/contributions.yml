@@ -28,12 +28,15 @@ jobs:
 
           username = "usmanwith1s"
 
+          # ---------------------------------------------------------
+          # GET REAL GITHUB CONTRIBUTION DATA
+          # ---------------------------------------------------------
+
           query = """
           query($login: String!) {
             user(login: $login) {
               contributionsCollection {
                 contributionCalendar {
-                  totalContributions
                   weeks {
                     contributionDays {
                       date
@@ -66,7 +69,9 @@ jobs:
           )
 
           with urllib.request.urlopen(request) as response:
-              result = json.loads(response.read().decode("utf-8"))
+              result = json.loads(
+                  response.read().decode("utf-8")
+              )
 
           if "errors" in result:
               raise RuntimeError(
@@ -81,11 +86,11 @@ jobs:
                   f"Could not find GitHub user: {username}"
               )
 
-          calendar = user["contributionsCollection"]["contributionCalendar"]
+          calendar = (
+              user["contributionsCollection"]
+              ["contributionCalendar"]
+          )
 
-          total = calendar["totalContributions"]
-
-          # Keep GitHub's real calendar structure.
           weeks = calendar["weeks"]
 
           if not weeks:
@@ -93,15 +98,85 @@ jobs:
                   "GitHub returned no contribution weeks."
               )
 
-          print(f"Found {len(weeks)} weeks.")
-          print(f"Total contributions: {total}")
+          # ---------------------------------------------------------
+          # FLATTEN THE REAL CONTRIBUTION DATA
+          # ---------------------------------------------------------
+
+          days = []
+
+          for week in weeks:
+              for day in week["contributionDays"]:
+                  days.append({
+                      "date": day["date"],
+                      "count": day["contributionCount"],
+                      "level": day["contributionLevel"]
+                  })
+
+          # GitHub normally returns 371 days so that complete weeks
+          # are represented. We display exactly the latest 365 days.
+          days = days[-365:]
+
+          if not days:
+              raise RuntimeError(
+                  "GitHub returned no contribution days."
+              )
+
+          # ---------------------------------------------------------
+          # CALCULATE REAL STATISTICS
+          # ---------------------------------------------------------
+
+          period_total = sum(
+              day["count"]
+              for day in days
+          )
+
+          highest_day = max(
+              day["count"]
+              for day in days
+          )
+
+          average_per_day = (
+              period_total / len(days)
+          )
+
+          # Current streak.
+          #
+          # Start from the newest contribution day and count
+          # consecutive days with at least one contribution.
+          current_streak = 0
+
+          for day in reversed(days):
+              if day["count"] > 0:
+                  current_streak += 1
+              else:
+                  break
+
+          print(
+              f"Contribution days: {len(days)}"
+          )
+
+          print(
+              f"Contributions in displayed period: {period_total}"
+          )
+
+          print(
+              f"Current streak: {current_streak} days"
+          )
+
+          print(
+              f"Highest in a day: {highest_day}"
+          )
+
+          print(
+              f"Average per day: {average_per_day:.1f}"
+          )
+
+          # ---------------------------------------------------------
+          # 3D CALENDAR SETTINGS
+          # ---------------------------------------------------------
 
           width = 1200
           height = 620
-
-          # ---------------------------------------------------------
-          # 3D CALENDAR GEOMETRY
-          # ---------------------------------------------------------
 
           cols = len(weeks)
           rows = 7
@@ -116,7 +191,10 @@ jobs:
           block_width = 13
           block_depth = 8
 
-          # Height of contribution towers.
+          # ---------------------------------------------------------
+          # CONTRIBUTION HEIGHT
+          # ---------------------------------------------------------
+
           def level_height(level):
               return {
                   "NONE": 3,
@@ -125,6 +203,10 @@ jobs:
                   "THIRD_QUARTILE": 65,
                   "FOURTH_QUARTILE": 95
               }.get(level, 3)
+
+          # ---------------------------------------------------------
+          # CONTRIBUTION COLOR
+          # ---------------------------------------------------------
 
           def level_color(level):
               return {
@@ -139,7 +221,7 @@ jobs:
           # ISOMETRIC PROJECTION
           # ---------------------------------------------------------
 
-          def project(col, row, height=0):
+          def project(col, row, height_value=0):
               x = (
                   base_x
                   + col * cell_w
@@ -150,13 +232,13 @@ jobs:
                   base_y
                   + col * cell_depth_y
                   + row * cell_depth_y
-                  - height
+                  - height_value
               )
 
               return x, y
 
           # ---------------------------------------------------------
-          # SVG START
+          # SVG HEADER
           # ---------------------------------------------------------
 
           svg = f'''<svg width="{width}" height="{height}"
@@ -214,23 +296,73 @@ jobs:
                 font-size="13">
               REAL GITHUB CONTRIBUTIONS · LAST 365 DAYS
           </text>
+
+          <!-- CONTRIBUTION STATISTICS -->
+
+          <text x="820" y="112"
+                fill="#4285f4"
+                font-family="Arial, sans-serif"
+                font-size="16"
+                font-weight="700">
+              Commit streaks
+          </text>
+
+          <text x="820" y="137"
+                fill="#ffffff"
+                font-family="Arial, sans-serif"
+                font-size="15">
+              {current_streak} commit streak
+          </text>
+
+          <text x="820" y="169"
+                fill="#4285f4"
+                font-family="Arial, sans-serif"
+                font-size="16"
+                font-weight="700">
+              Commits per day
+          </text>
+
+          <text x="820" y="194"
+                fill="#ffffff"
+                font-family="Arial, sans-serif"
+                font-size="15">
+              Highest in a day at {highest_day}
+          </text>
+
+          <text x="820" y="218"
+                fill="#ffffff"
+                font-family="Arial, sans-serif"
+                font-size="15">
+              Average per day at ~{average_per_day:.1f}
+          </text>
           '''
 
           # ---------------------------------------------------------
           # CALENDAR PLANE
           # ---------------------------------------------------------
 
-          # Draw the entire 53-week × 7-day plane first.
           for col in range(cols):
               for row in range(rows):
 
-                  x, y = project(col, row, 0)
+                  x, y = project(
+                      col,
+                      row,
+                      0
+                  )
 
                   x2 = x + cell_w
                   y2 = y + cell_depth_y
 
-                  x3 = x + cell_w - cell_depth_x
-                  y3 = y + cell_depth_y * 2
+                  x3 = (
+                      x
+                      + cell_w
+                      - cell_depth_x
+                  )
+
+                  y3 = (
+                      y
+                      + cell_depth_y * 2
+                  )
 
                   x4 = x - cell_depth_x
                   y4 = y + cell_depth_y
@@ -251,93 +383,97 @@ jobs:
           # CONTRIBUTION BLOCKS
           # ---------------------------------------------------------
 
-          for col, week in enumerate(weeks):
+          for index, day in enumerate(days):
 
-              for row, day in enumerate(
-                  week["contributionDays"]
-              ):
+              # Map the latest 365 days back onto the 53-week
+              # calendar positions.
+              original_index = (
+                  len(weeks) * 7
+                  - len(days)
+                  + index
+              )
 
-                  level = day["contributionLevel"]
-                  count = day["contributionCount"]
+              col = original_index // 7
+              row = original_index % 7
 
-                  height_value = level_height(level)
+              level = day["level"]
+              count = day["count"]
 
-                  x, y = project(
-                      col,
-                      row,
-                      height_value
-                  )
+              height_value = level_height(
+                  level
+              )
 
-                  fill = level_color(level)
+              x, y = project(
+                  col,
+                  row,
+                  height_value
+              )
 
-                  # Width of visible cube.
-                  w = block_width
-                  d = block_depth
+              fill = level_color(
+                  level
+              )
 
-                  # -------------------------------------------------
-                  # FRONT FACE
-                  # -------------------------------------------------
+              w = block_width
+              d = block_depth
 
-                  front = f'''
-                  <polygon points="
-                      {x:.1f},{y:.1f}
-                      {x + w:.1f},{y + 3:.1f}
-                      {x + w:.1f},{y + height_value:.1f}
-                      {x:.1f},{y + height_value - 3:.1f}
-                  "
-                  fill="{fill}"/>
-                  '''
+              # -----------------------------------------------------
+              # FRONT FACE
+              # -----------------------------------------------------
 
-                  # -------------------------------------------------
-                  # RIGHT FACE
-                  # -------------------------------------------------
+              svg += f'''
+              <polygon points="
+                  {x:.1f},{y:.1f}
+                  {x + w:.1f},{y + 3:.1f}
+                  {x + w:.1f},{y + height_value:.1f}
+                  {x:.1f},{y + height_value - 3:.1f}
+              "
+              fill="{fill}"/>
+              '''
 
-                  right = f'''
-                  <polygon points="
-                      {x + w:.1f},{y + 3:.1f}
-                      {x + w + d:.1f},{y - 2:.1f}
-                      {x + w + d:.1f},{y + height_value - 8:.1f}
-                      {x + w:.1f},{y + height_value:.1f}
-                  "
-                  fill="{fill}"
-                  opacity="0.72"/>
-                  '''
+              # -----------------------------------------------------
+              # RIGHT FACE
+              # -----------------------------------------------------
 
-                  # -------------------------------------------------
-                  # TOP FACE
-                  # -------------------------------------------------
+              svg += f'''
+              <polygon points="
+                  {x + w:.1f},{y + 3:.1f}
+                  {x + w + d:.1f},{y - 2:.1f}
+                  {x + w + d:.1f},{y + height_value - 8:.1f}
+                  {x + w:.1f},{y + height_value:.1f}
+              "
+              fill="{fill}"
+              opacity="0.72"/>
+              '''
 
-                  top = f'''
-                  <polygon points="
-                      {x:.1f},{y:.1f}
-                      {x + w:.1f},{y + 3:.1f}
-                      {x + w + d:.1f},{y - 2:.1f}
-                      {x + d:.1f},{y - 5:.1f}
-                  "
-                  fill="{fill}"
-                  opacity="0.9"/>
-                  '''
+              # -----------------------------------------------------
+              # TOP FACE
+              # -----------------------------------------------------
 
-                  svg += front
-                  svg += right
-                  svg += top
+              svg += f'''
+              <polygon points="
+                  {x:.1f},{y:.1f}
+                  {x + w:.1f},{y + 3:.1f}
+                  {x + w + d:.1f},{y - 2:.1f}
+                  {x + d:.1f},{y - 5:.1f}
+              "
+              fill="{fill}"
+              opacity="0.9"/>
+              '''
 
           # ---------------------------------------------------------
-          # LEGEND / FOOTER
+          # FOOTER
           # ---------------------------------------------------------
-
-          legend_y = 505
 
           svg += f'''
-          <text x="600" y="{legend_y}"
+          <text x="600" y="505"
                 text-anchor="middle"
                 fill="#777777"
                 font-family="monospace"
                 font-size="13">
-              {total} contributions · sourced directly from GitHub
+              {period_total} contributions · sourced directly from GitHub
           </text>
 
-          <text x="600" y="{legend_y + 28}"
+          <text x="600" y="533"
                 text-anchor="middle"
                 fill="#555555"
                 font-family="monospace"
@@ -345,27 +481,27 @@ jobs:
               LESS
           </text>
 
-          <rect x="545" y="{legend_y + 18}"
+          <rect x="545" y="523"
                 width="12" height="12"
                 fill="#151515"/>
 
-          <rect x="563" y="{legend_y + 18}"
+          <rect x="563" y="523"
                 width="12" height="12"
                 fill="#28520d"/>
 
-          <rect x="581" y="{legend_y + 18}"
+          <rect x="581" y="523"
                 width="12" height="12"
                 fill="#4f8515"/>
 
-          <rect x="599" y="{legend_y + 18}"
+          <rect x="599" y="523"
                 width="12" height="12"
                 fill="#72b51e"/>
 
-          <rect x="617" y="{legend_y + 18}"
+          <rect x="617" y="523"
                 width="12" height="12"
                 fill="#9cff00"/>
 
-          <text x="640" y="{legend_y + 28}"
+          <text x="640" y="533"
                 fill="#555555"
                 font-family="monospace"
                 font-size="11">
@@ -376,7 +512,7 @@ jobs:
           '''
 
           # ---------------------------------------------------------
-          # WRITE FILE
+          # WRITE SVG
           # ---------------------------------------------------------
 
           output = Path(
@@ -394,9 +530,13 @@ jobs:
           )
 
           print(
-              f"Generated {output} from "
-              f"{len(weeks)} real GitHub weeks."
+              f"Generated {output}"
           )
+
+          print(
+              f"Displayed {len(days)} real contribution days."
+          )
+
           PY
 
       - name: Commit contribution visualization
