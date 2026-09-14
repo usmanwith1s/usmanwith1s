@@ -22,6 +22,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
+          import os
           import urllib.request
           from pathlib import Path
 
@@ -57,7 +58,7 @@ jobs:
               "https://api.github.com/graphql",
               data=payload,
               headers={
-                  "Authorization": f"Bearer {__import__('os').environ['GITHUB_TOKEN']}",
+                  "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
                   "Content-Type": "application/json",
                   "User-Agent": "usmanwith1s-contribution-generator"
               },
@@ -84,68 +85,79 @@ jobs:
 
           total = calendar["totalContributions"]
 
-          values = []
+          # Keep GitHub's real calendar structure.
+          weeks = calendar["weeks"]
 
-          for week in calendar["weeks"]:
-              for day in week["contributionDays"]:
-                  values.append((
-                      day["date"],
-                      day["contributionCount"],
-                      day["contributionLevel"]
-                  ))
-
-          # Keep the latest 365 days.
-          values = values[-365:]
-
-          if not values:
+          if not weeks:
               raise RuntimeError(
-                  "GitHub returned no contribution data."
+                  "GitHub returned no contribution weeks."
               )
 
-          print(
-              f"Found {len(values)} contribution days."
-          )
-
-          print(
-              f"Total contributions: {total}"
-          )
+          print(f"Found {len(weeks)} weeks.")
+          print(f"Total contributions: {total}")
 
           width = 1200
           height = 620
 
-          cols = 53
+          # ---------------------------------------------------------
+          # 3D CALENDAR GEOMETRY
+          # ---------------------------------------------------------
+
+          cols = len(weeks)
           rows = 7
 
-          cell_w = 17
-          cell_d = 4.5
+          cell_w = 16
+          cell_depth_x = 7
+          cell_depth_y = 5
 
-          base_x = 180
-          base_y = 250
+          base_x = 145
+          base_y = 330
 
-          max_height = 110
+          block_width = 13
+          block_depth = 8
 
-          def project(col, row, height):
-              x = base_x + (col - row) * cell_w
-              y = base_y + (col + row) * cell_d - height
-              return x, y
-
+          # Height of contribution towers.
           def level_height(level):
               return {
-                  "NONE": 2,
+                  "NONE": 3,
                   "FIRST_QUARTILE": 18,
-                  "SECOND_QUARTILE": 40,
-                  "THIRD_QUARTILE": 68,
-                  "FOURTH_QUARTILE": 100
-              }.get(level, 2)
+                  "SECOND_QUARTILE": 38,
+                  "THIRD_QUARTILE": 65,
+                  "FOURTH_QUARTILE": 95
+              }.get(level, 3)
 
           def level_color(level):
               return {
-                  "NONE": "#161616",
-                  "FIRST_QUARTILE": "#365f12",
-                  "SECOND_QUARTILE": "#5f941b",
-                  "THIRD_QUARTILE": "#82c72a",
+                  "NONE": "#151515",
+                  "FIRST_QUARTILE": "#28520d",
+                  "SECOND_QUARTILE": "#4f8515",
+                  "THIRD_QUARTILE": "#72b51e",
                   "FOURTH_QUARTILE": "#9cff00"
-              }.get(level, "#161616")
+              }.get(level, "#151515")
+
+          # ---------------------------------------------------------
+          # ISOMETRIC PROJECTION
+          # ---------------------------------------------------------
+
+          def project(col, row, height=0):
+              x = (
+                  base_x
+                  + col * cell_w
+                  - row * cell_depth_x
+              )
+
+              y = (
+                  base_y
+                  + col * cell_depth_y
+                  + row * cell_depth_y
+                  - height
+              )
+
+              return x, y
+
+          # ---------------------------------------------------------
+          # SVG START
+          # ---------------------------------------------------------
 
           svg = f'''<svg width="{width}" height="{height}"
           viewBox="0 0 {width} {height}"
@@ -174,21 +186,21 @@ jobs:
               ~/ contributions --3d
           </text>
 
-          <text x="50" y="112"
+          <text x="32" y="112"
                 fill="#9cff00"
                 font-family="monospace"
                 font-size="17">
               usman@github:~$
           </text>
 
-          <text x="215" y="112"
+          <text x="195" y="112"
                 fill="#ffffff"
                 font-family="monospace"
                 font-size="17">
               git activity --visualize
           </text>
 
-          <text x="50" y="158"
+          <text x="32" y="158"
                 fill="#ffffff"
                 font-family="Arial, sans-serif"
                 font-size="30"
@@ -196,7 +208,7 @@ jobs:
               Contribution Activity
           </text>
 
-          <text x="50" y="188"
+          <text x="32" y="188"
                 fill="#777777"
                 font-family="monospace"
                 font-size="13">
@@ -204,71 +216,120 @@ jobs:
           </text>
           '''
 
-          # Ground grid.
-          for col in range(cols + 1):
-              x1, y1 = project(col, 0, 0)
-              x2, y2 = project(col, rows, 0)
+          # ---------------------------------------------------------
+          # CALENDAR PLANE
+          # ---------------------------------------------------------
 
-              svg += f'''
-              <line x1="{x1:.1f}" y1="{y1:.1f}"
-                    x2="{x2:.1f}" y2="{y2:.1f}"
-                    stroke="#202020"
-                    stroke-width="1"/>
-              '''
+          # Draw the entire 53-week × 7-day plane first.
+          for col in range(cols):
+              for row in range(rows):
 
-          for row in range(rows + 1):
-              x1, y1 = project(0, row, 0)
-              x2, y2 = project(cols, row, 0)
+                  x, y = project(col, row, 0)
 
-              svg += f'''
-              <line x1="{x1:.1f}" y1="{y1:.1f}"
-                    x2="{x2:.1f}" y2="{y2:.1f}"
-                    stroke="#202020"
-                    stroke-width="1"/>
-              '''
+                  x2 = x + cell_w
+                  y2 = y + cell_depth_y
 
-          # Contribution blocks.
-          for index, (date, count, level) in enumerate(values):
+                  x3 = x + cell_w - cell_depth_x
+                  y3 = y + cell_depth_y * 2
 
-              col = index // rows
-              row = index % rows
+                  x4 = x - cell_depth_x
+                  y4 = y + cell_depth_y
 
-              height_value = level_height(level)
+                  svg += f'''
+                  <polygon points="
+                      {x:.1f},{y:.1f}
+                      {x2:.1f},{y2:.1f}
+                      {x3:.1f},{y3:.1f}
+                      {x4:.1f},{y4:.1f}
+                  "
+                  fill="#151515"
+                  stroke="#202020"
+                  stroke-width="1"/>
+                  '''
 
-              x, y = project(
-                  col,
-                  row,
-                  height_value
-              )
+          # ---------------------------------------------------------
+          # CONTRIBUTION BLOCKS
+          # ---------------------------------------------------------
 
-              fill = level_color(level)
+          for col, week in enumerate(weeks):
 
-              # Front face.
-              svg += f'''
-              <polygon points="
-                  {x:.1f},{y:.1f}
-                  {x + cell_w:.1f},{y - cell_d:.1f}
-                  {x + cell_w:.1f},{y + max_height / 4:.1f}
-                  {x:.1f},{y + max_height / 4 + cell_d:.1f}
-              "
-              fill="{fill}"
-              opacity="0.95"/>
-              '''
+              for row, day in enumerate(
+                  week["contributionDays"]
+              ):
 
-              # Top face.
-              svg += f'''
-              <polygon points="
-                  {x:.1f},{y:.1f}
-                  {x + cell_w:.1f},{y - cell_d:.1f}
-                  {x + cell_w / 2:.1f},{y - cell_d * 2:.1f}
-                  {x - cell_w / 2:.1f},{y - cell_d:.1f}
-              "
-              fill="{fill}"
-              opacity="0.75"/>
-              '''
+                  level = day["contributionLevel"]
+                  count = day["contributionCount"]
+
+                  height_value = level_height(level)
+
+                  x, y = project(
+                      col,
+                      row,
+                      height_value
+                  )
+
+                  fill = level_color(level)
+
+                  # Width of visible cube.
+                  w = block_width
+                  d = block_depth
+
+                  # -------------------------------------------------
+                  # FRONT FACE
+                  # -------------------------------------------------
+
+                  front = f'''
+                  <polygon points="
+                      {x:.1f},{y:.1f}
+                      {x + w:.1f},{y + 3:.1f}
+                      {x + w:.1f},{y + height_value:.1f}
+                      {x:.1f},{y + height_value - 3:.1f}
+                  "
+                  fill="{fill}"/>
+                  '''
+
+                  # -------------------------------------------------
+                  # RIGHT FACE
+                  # -------------------------------------------------
+
+                  right = f'''
+                  <polygon points="
+                      {x + w:.1f},{y + 3:.1f}
+                      {x + w + d:.1f},{y - 2:.1f}
+                      {x + w + d:.1f},{y + height_value - 8:.1f}
+                      {x + w:.1f},{y + height_value:.1f}
+                  "
+                  fill="{fill}"
+                  opacity="0.72"/>
+                  '''
+
+                  # -------------------------------------------------
+                  # TOP FACE
+                  # -------------------------------------------------
+
+                  top = f'''
+                  <polygon points="
+                      {x:.1f},{y:.1f}
+                      {x + w:.1f},{y + 3:.1f}
+                      {x + w + d:.1f},{y - 2:.1f}
+                      {x + d:.1f},{y - 5:.1f}
+                  "
+                  fill="{fill}"
+                  opacity="0.9"/>
+                  '''
+
+                  svg += front
+                  svg += right
+                  svg += top
+
+          # ---------------------------------------------------------
+          # LEGEND / FOOTER
+          # ---------------------------------------------------------
+
+          legend_y = 505
 
           svg += f'''
-          <text x="600" y="545"
+          <text x="600" y="{legend_y}"
                 text-anchor="middle"
                 fill="#777777"
                 font-family="monospace"
@@ -276,8 +337,47 @@ jobs:
               {total} contributions · sourced directly from GitHub
           </text>
 
+          <text x="600" y="{legend_y + 28}"
+                text-anchor="middle"
+                fill="#555555"
+                font-family="monospace"
+                font-size="11">
+              LESS
+          </text>
+
+          <rect x="545" y="{legend_y + 18}"
+                width="12" height="12"
+                fill="#151515"/>
+
+          <rect x="563" y="{legend_y + 18}"
+                width="12" height="12"
+                fill="#28520d"/>
+
+          <rect x="581" y="{legend_y + 18}"
+                width="12" height="12"
+                fill="#4f8515"/>
+
+          <rect x="599" y="{legend_y + 18}"
+                width="12" height="12"
+                fill="#72b51e"/>
+
+          <rect x="617" y="{legend_y + 18}"
+                width="12" height="12"
+                fill="#9cff00"/>
+
+          <text x="640" y="{legend_y + 28}"
+                fill="#555555"
+                font-family="monospace"
+                font-size="11">
+              MORE
+          </text>
+
           </svg>
           '''
+
+          # ---------------------------------------------------------
+          # WRITE FILE
+          # ---------------------------------------------------------
 
           output = Path(
               "assets/contributions-3d.svg"
@@ -295,7 +395,7 @@ jobs:
 
           print(
               f"Generated {output} from "
-              f"{len(values)} real contribution days."
+              f"{len(weeks)} real GitHub weeks."
           )
           PY
 
