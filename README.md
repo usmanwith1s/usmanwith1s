@@ -16,7 +16,7 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 
 <div align="center">
 
-<table border="0" cellspacing="0" cellpadding="4">
+<table border="0" cellspacing="0" cellpadding="1">
 <tr>
 
 <td>
