@@ -12,15 +12,15 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 
 <p>
 <a href="https://usmanwith1s.github.io/">
-<img src="https://img.shields.io/badge/PORTFOLIO-111111?style=for-the-badge&logo=google-chrome&logoColor=9cff00&labelColor=111111">
+  <img src="https://img.shields.io/badge/PORTFOLIO-000000?style=for-the-badge&logo=google-chrome&logoColor=9cff00" alt="Portfolio">
 </a>
-&nbsp;
+
 <a href="https://www.linkedin.com/in/muhammad-usman-20b6a03aa">
-<img src="https://img.shields.io/badge/LINKEDIN-111111?style=for-the-badge&logo=linkedin&logoColor=9cff00&labelColor=111111">
+  <img src="https://img.shields.io/badge/LINKEDIN-000000?style=for-the-badge&logo=linkedin&logoColor=9cff00" alt="LinkedIn">
 </a>
-&nbsp;
+
 <a href="https://github.com/usmanwith1s">
-<img src="https://img.shields.io/badge/GITHUB-111111?style=for-the-badge&logo=github&logoColor=9cff00&labelColor=111111">
+  <img src="https://img.shields.io/badge/GITHUB-000000?style=for-the-badge&logo=github&logoColor=9cff00" alt="GitHub">
 </a>
 </p>
 <br>
