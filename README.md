@@ -1,4 +1,4 @@
-<div align="center">
+ <div align="center">
 
 <img src="./assets/profile-reveal.png" width="300">
 
@@ -23,6 +23,9 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 <img src="https://img.shields.io/badge/GITHUB-111111?style=for-the-badge&logo=github&logoColor=9cff00&labelColor=111111">
 </a>
 </p>
+<br>
+
+<img src="./assets/whoami.svg" width="100%" alt="Muhammad Usman whoami terminal">
 
 </div>
 
