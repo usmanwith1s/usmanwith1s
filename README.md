@@ -1,5 +1,10 @@
 <div align="center">
 
+<img src="./assets/profile-reveal.png" width="320">
+
+</div>
+<div align="center">
+
 <img src="./assets/profile-reveal.gif" width="320">
 
 <br>
