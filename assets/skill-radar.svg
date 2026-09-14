@@ -1,0 +1,239 @@
+<svg width="1000" height="560"
+viewBox="0 0 1000 560"
+xmlns="http://www.w3.org/2000/svg">
+
+<rect width="1000" height="560" rx="24"
+      fill="#0b0b0b"
+      stroke="#252525"
+      stroke-width="2"/>
+
+<!-- Terminal header -->
+<rect width="1000" height="58" rx="24" fill="#111111"/>
+<rect y="34" width="1000" height="24" fill="#111111"/>
+
+<circle cx="28" cy="29" r="7" fill="#ff5f56"/>
+<circle cx="52" cy="29" r="7" fill="#ffbd2e"/>
+<circle cx="76" cy="29" r="7" fill="#27c93f"/>
+
+<text x="500" y="35"
+      text-anchor="middle"
+      fill="#777777"
+      font-family="monospace"
+      font-size="15">
+    ~/ skill radar
+</text>
+
+<!-- Command -->
+<text x="48" y="105"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="17">
+    usman@github:~$
+</text>
+
+<text x="215" y="105"
+      fill="#ffffff"
+      font-family="monospace"
+      font-size="17">
+    ./skills --visualize
+</text>
+
+<!-- Radar rings -->
+<polygon points="500.0,261.2 530.9,274.1 543.8,305.0 530.9,335.9 500.0,348.8 469.1,335.9 456.2,305.0 469.1,274.1"
+         fill="none"
+         stroke="#252525"
+         stroke-width="1"/>
+
+<polygon points="500.0,217.5 561.9,243.1 587.5,305.0 561.9,366.9 500.0,392.5 438.1,366.9 412.5,305.0 438.1,243.1"
+         fill="none"
+         stroke="#252525"
+         stroke-width="1"/>
+
+<polygon points="500.0,173.8 592.8,212.2 631.2,305.0 592.8,397.8 500.0,436.2 407.2,397.8 368.8,305.0 407.2,212.2"
+         fill="none"
+         stroke="#252525"
+         stroke-width="1"/>
+
+<polygon points="500.0,130.0 623.7,181.3 675.0,305.0 623.7,428.7 500.0,480.0 376.3,428.7 325.0,305.0 376.3,181.3"
+         fill="none"
+         stroke="#333333"
+         stroke-width="1.5"/>
+
+<!-- Radar axes -->
+
+<line x1="500" y1="305"
+      x2="500.0" y2="130.0"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="623.7" y2="181.3"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="675.0" y2="305.0"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="623.7" y2="428.7"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="500.0" y2="480.0"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="376.3" y2="428.7"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="325.0" y2="305.0"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<line x1="500" y1="305"
+      x2="376.3" y2="181.3"
+      stroke="#252525"
+      stroke-width="1"/>
+
+<polygon points="500.0,151.0 608.9,196.1 647.0,305.0 584.1,389.1 500.0,406.5 403.5,401.5 391.5,305.0 398.5,203.5"
+         fill="#9cff00"
+         fill-opacity="0.12"
+         stroke="#9cff00"
+         stroke-width="3"
+         stroke-linejoin="round"/>
+
+<circle cx="500.0" cy="151.0"
+        r="6"
+        fill="#5382a1"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="608.9" cy="196.1"
+        r="6"
+        fill="#e34f26"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="647.0" cy="305.0"
+        r="6"
+        fill="#1572b6"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="584.1" cy="389.1"
+        r="6"
+        fill="#f7df1e"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="500.0" cy="406.5"
+        r="6"
+        fill="#3776ab"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="403.5" cy="401.5"
+        r="6"
+        fill="#f05032"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="391.5" cy="305.0"
+        r="6"
+        fill="#9cff00"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<circle cx="398.5" cy="203.5"
+        r="6"
+        fill="#ff007f"
+        stroke="#ffffff"
+        stroke-width="2"/>
+
+<text x="500.0" y="87.0"
+      text-anchor="middle"
+      fill="#5382a1"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    JAVA
+</text>
+
+<text x="657.7" y="152.3"
+      text-anchor="start"
+      fill="#e34f26"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    HTML
+</text>
+
+<text x="723.0" y="310.0"
+      text-anchor="start"
+      fill="#1572b6"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    CSS
+</text>
+
+<text x="657.7" y="467.7"
+      text-anchor="start"
+      fill="#f7df1e"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    JAVASCRIPT
+</text>
+
+<text x="500.0" y="533.0"
+      text-anchor="middle"
+      fill="#3776ab"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    PYTHON
+</text>
+
+<text x="342.3" y="467.7"
+      text-anchor="end"
+      fill="#f05032"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    GIT / GITHUB
+</text>
+
+<text x="277.0" y="310.0"
+      text-anchor="end"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    GAME DEV
+</text>
+
+<text x="342.3" y="152.3"
+      text-anchor="end"
+      fill="#ff007f"
+      font-family="monospace"
+      font-size="13"
+      font-weight="700">
+    UI / GUI
+</text>
+
+<text x="500" y="525"
+      text-anchor="middle"
+      fill="#777777"
+      font-family="monospace"
+      font-size="13">
+    relative strengths · based on projects and technologies I actually use
+</text>
+
+</svg>
