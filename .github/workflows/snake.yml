@@ -1,0 +1,42 @@
+name: Generate Contribution Snake
+
+"on":
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-snake:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Generate purple-pink contribution snake
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: usmanwith1s
+          outputs: |
+            dist/github-contribution-grid-snake.svg?color_snake=%23d946ef&color_dots=%23161b22,%230e4429,%23006d32,%2326a641,%2339d353
+            dist/github-contribution-grid-snake-dark.svg?color_snake=%23f0abfc&color_dots=%23161b22,%230e4429,%23006d32,%2326a641,%2339d353
+
+      - name: Move snake animations into assets
+        run: |
+          mkdir -p assets
+          cp dist/github-contribution-grid-snake.svg assets/github-contribution-grid-snake.svg
+          cp dist/github-contribution-grid-snake-dark.svg assets/github-contribution-grid-snake-dark.svg
+
+      - name: Commit snake animations
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add assets/github-contribution-grid-snake.svg assets/github-contribution-grid-snake-dark.svg
+
+          git diff --cached --quiet ||             git commit -m "Update contribution snake"
+
+          git push
