@@ -1,1 +1,245 @@
+name: Generate Contribution 3D
 
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-contribution-3d:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Generate 3D contribution SVG
+        run: |
+          python3 - <<'PY'
+          import html
+          import re
+          import urllib.request
+          from pathlib import Path
+
+          username = "usmanwith1s"
+
+          url = f"https://github.com/{username}"
+
+          request = urllib.request.Request(
+              url,
+              headers={
+                  "User-Agent": "Mozilla/5.0"
+              }
+          )
+
+          page = urllib.request.urlopen(request).read().decode("utf-8")
+
+          matches = re.findall(
+              r'<td[^>]*data-date="([^"]+)"[^>]*data-level="(\d+)"',
+              page
+          )
+
+          if not matches:
+              raise RuntimeError(
+                  "Could not find GitHub contribution data."
+              )
+
+          # Keep the latest 365 contribution days.
+          matches = matches[-365:]
+
+          values = [
+              (date, int(level))
+              for date, level in matches
+          ]
+
+          width = 1200
+          height = 620
+
+          # Isometric-style projection.
+          cols = 53
+          rows = 7
+
+          cell_w = 17
+          cell_d = 9
+          base_x = 180
+          base_y = 420
+
+          max_height = 110
+
+          def project(col, row, height):
+              x = base_x + (col - row) * cell_w
+              y = base_y + (col + row) * cell_d - height
+              return x, y
+
+          def level_height(level):
+              return {
+                  0: 2,
+                  1: 18,
+                  2: 40,
+                  3: 68,
+                  4: 100
+              }.get(level, 2)
+
+          svg = f'''<svg width="{width}" height="{height}"
+          viewBox="0 0 {width} {height}"
+          xmlns="http://www.w3.org/2000/svg">
+
+          <rect width="{width}" height="{height}" rx="28"
+                fill="#0b0b0b"
+                stroke="#252525"
+                stroke-width="2"/>
+
+          <rect width="{width}" height="62" rx="28"
+                fill="#111111"/>
+
+          <rect y="38" width="{width}" height="24"
+                fill="#111111"/>
+
+          <circle cx="30" cy="31" r="7" fill="#ff5f56"/>
+          <circle cx="54" cy="31" r="7" fill="#ffbd2e"/>
+          <circle cx="78" cy="31" r="7" fill="#27c93f"/>
+
+          <text x="600" y="38"
+                text-anchor="middle"
+                fill="#777777"
+                font-family="monospace"
+                font-size="15">
+              ~/ contributions --3d
+          </text>
+
+          <text x="50" y="112"
+                fill="#9cff00"
+                font-family="monospace"
+                font-size="17">
+              usman@github:~$
+          </text>
+
+          <text x="215" y="112"
+                fill="#ffffff"
+                font-family="monospace"
+                font-size="17">
+              git activity --visualize
+          </text>
+
+          <text x="50" y="158"
+                fill="#ffffff"
+                font-family="Arial, sans-serif"
+                font-size="30"
+                font-weight="700">
+              Contribution Activity
+          </text>
+
+          <text x="50" y="188"
+                fill="#777777"
+                font-family="monospace"
+                font-size="13">
+              REAL GITHUB CONTRIBUTIONS · LAST 365 DAYS
+          </text>
+          '''
+
+          # Ground grid.
+          for col in range(cols + 1):
+              x1, y1 = project(col, 0, 0)
+              x2, y2 = project(col, rows, 0)
+
+              svg += f'''
+              <line x1="{x1:.1f}" y1="{y1:.1f}"
+                    x2="{x2:.1f}" y2="{y2:.1f}"
+                    stroke="#202020"
+                    stroke-width="1"/>
+              '''
+
+          for row in range(rows + 1):
+              x1, y1 = project(0, row, 0)
+              x2, y2 = project(cols, row, 0)
+
+              svg += f'''
+              <line x1="{x1:.1f}" y1="{y1:.1f}"
+                    x2="{x2:.1f}" y2="{y2:.1f}"
+                    stroke="#202020"
+                    stroke-width="1"/>
+              '''
+
+          # Contribution blocks.
+          for index, (date, level) in enumerate(values):
+              col = index // rows
+              row = index % rows
+
+              height_value = level_height(level)
+
+              x, y = project(col, row, height_value)
+
+              if level == 0:
+                  fill = "#161616"
+              elif level == 1:
+                  fill = "#365f12"
+              elif level == 2:
+                  fill = "#5f941b"
+              elif level == 3:
+                  fill = "#82c72a"
+              else:
+                  fill = "#9cff00"
+
+              # Front face.
+              svg += f'''
+              <polygon points="
+                  {x:.1f},{y:.1f}
+                  {x + cell_w:.1f},{y - cell_d:.1f}
+                  {x + cell_w:.1f},{y + max_height / 4:.1f}
+                  {x:.1f},{y + max_height / 4 + cell_d:.1f}
+              "
+              fill="{fill}"
+              opacity="0.95"/>
+              '''
+
+              # Top face.
+              svg += f'''
+              <polygon points="
+                  {x:.1f},{y:.1f}
+                  {x + cell_w:.1f},{y - cell_d:.1f}
+                  {x + cell_w / 2:.1f},{y - cell_d * 2:.1f}
+                  {x - cell_w / 2:.1f},{y - cell_d:.1f}
+              "
+              fill="{fill}"
+              opacity="0.75"/>
+              '''
+
+          svg += '''
+          <text x="600" y="545"
+                text-anchor="middle"
+                fill="#777777"
+                font-family="monospace"
+                font-size="13">
+              activity intensity · sourced directly from github.com/usmanwith1s
+          </text>
+
+          </svg>
+          '''
+
+          output = Path("assets/contributions-3d.svg")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(
+              html.unescape(svg),
+              encoding="utf-8"
+          )
+
+          print(
+              f"Generated {output} from "
+              f"{len(values)} real contribution days."
+          )
+          PY
+
+      - name: Commit contribution visualization
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add assets/contributions-3d.svg
+
+          git diff --cached --quiet || \
+            git commit -m "Update contribution 3D visualization"
+
+          git push
