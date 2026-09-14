@@ -2,48 +2,78 @@
 
 <img src="./assets/profile-reveal.png" width="300">
 
-<br><br>
+<h1>MUHAMMAD USMAN</h1>
 
-# MUHAMMAD USMAN
+<p><code>@usmanwith1s</code></p>
 
-### `@usmanwith1s`
+<p>
+Software Engineering Student · Java Developer · Web Developer · Game Development Enthusiast
+</p>
 
-**Software Engineering Student · Java Developer · Web Developer · Game Development Enthusiast**
-
-<br>
-
-> Building things, breaking things, and learning how they work.
-
-<br>
-
+<p>
 <a href="https://usmanwith1s.github.io/">
-  <img src="https://img.shields.io/badge/🌐%20PORTFOLIO-000000?style=for-the-badge&labelColor=000000&color=9cff00" alt="Portfolio">
+<img src="https://img.shields.io/badge/PORTFOLIO-111111?style=for-the-badge&logo=google-chrome&logoColor=9cff00&labelColor=111111">
 </a>
 &nbsp;
 <a href="https://www.linkedin.com/in/muhammad-usman-20b6a03aa">
-  <img src="https://img.shields.io/badge/💼%20LINKEDIN-000000?style=for-the-badge&labelColor=000000&color=9cff00" alt="LinkedIn">
+<img src="https://img.shields.io/badge/LINKEDIN-111111?style=for-the-badge&logo=linkedin&logoColor=9cff00&labelColor=111111">
 </a>
 &nbsp;
 <a href="https://github.com/usmanwith1s">
-  <div align="center">
-
-## `~/ whoami`
-
-<img src="https://img.shields.io/badge/STATUS-BUILDING%20THINGS-9cff00?style=for-the-badge&labelColor=111111&color=111111">
+<img src="https://img.shields.io/badge/GITHUB-111111?style=for-the-badge&logo=github&logoColor=9cff00&labelColor=111111">
+</a>
+</p>
 
 </div>
 
-<table>
+<br>
+
+<h2 align="center"><code>~/ whoami</code></h2>
+
+<table align="center">
 <tr>
 <td width="55%" valign="top">
 
-### `$ whoami`
+<h3><code>$ whoami</code></h3>
 
-```text
+<pre>
 Muhammad Usman
 Software Engineering Student
 
 Java Developer
 Web Developer
 Game Development Enthusiast
-</div>
+</pre>
+
+<p>
+I'm a Software Engineering student who enjoys
+building projects from scratch and learning by
+turning ideas into working software.
+</p>
+
+</td>
+
+<td width="45%" valign="top">
+
+<h3><code>$ current_focus</code></h3>
+
+<pre>
+[+] Java
+[+] Web Development
+[+] Game Development
+[+] Problem Solving
+[+] Building Projects
+</pre>
+
+<h3><code>$ projects</code></h3>
+
+<pre>
+GameHub
+Hand Survivor
+Number Pattern Game
+Password Challenge Game
+</pre>
+
+</td>
+</tr>
+</table>
