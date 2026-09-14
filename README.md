@@ -1,52 +1,19 @@
-# Hi, I'm Muhammad Usman — known online as usmanwith1s.👋
+<div align="center">
 
-Software Engineering student focused on building practical software, clean interfaces, and interactive experiences.
+<img src="./assets/profile-reveal.gif" width="320">
 
-## About Me
+<br>
 
-* 🎓 BS Software Engineering student
-* 💻 Interested in Java, frontend development, and software projects
-* 🎮 Long-term interest in game development
-* 🧠 I enjoy solving problems and finding efficient ways to build things
-* 🚀 Currently building my personal portfolio and improving my GitHub profile
+# MUHAMMAD USMAN
 
-## Tech Stack
+### `@usmanwith1s`
 
-**Languages & Web**
+**Software Engineering Student · Java Developer · Web Developer · Game Development Enthusiast**
 
-* Java
-* HTML
-* CSS
-* JavaScript
-* SQL
+<br>
 
-**Tools**
+[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=google-chrome&logoColor=9cff00)](https://usmanwith1s.github.io/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-000000?style=for-the-badge&logo=linkedin&logoColor=9cff00)](https://www.linkedin.com/in/muhammad-usman-20b6a03aa)
+[![GitHub](https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=9cff00)](https://github.com/usmanwith1s)
 
-* Git
-* GitHub
-* IntelliJ IDEA
-* Netlify
-* CircuitMaker
-
-
-
-## Featured Projects
-
-### 🎮 Number Pattern Game
-A Java Swing number pattern game with authentication, scoring, and file-based data storage.
-
-[View Repository](https://github.com/usmanwith1s/Number-Pattern-Game)
-
-### 🔐 Password Challenge Game
-An interactive Java Swing challenge game featuring progressive rules, validation, hints, lives, and multiple challenge states.
-
-[View Repository](https://github.com/usmanwith1s/Password-Challenge-Game)
-## Connect With Me
-
-- 🌐 Portfolio: https://usmanwith1s.github.io/
-- 💼 LinkedIn: https://www.linkedin.com/in/muhammad-usman-20b6a03aa
-- 📷 Instagram: @usmanwith1s
-
----
-
-> Building, learning, and improving one project at a time.
+</div>
