@@ -117,10 +117,10 @@ jobs:
           rows = 7
 
           cell_w = 17
-          cell_d = 9
+          cell_d = 4.5
 
           base_x = 180
-          base_y = 420
+          base_y = 250
 
           max_height = 110
 
