@@ -24,12 +24,15 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 
 </p>
 </p>
+<h2>~/ Whoami</h2>
 <br>
 
 <img src="./assets/whoami.svg" width="100%" alt="Muhammad Usman whoami terminal">
+<h2>~/ Toolbox</h2>
 <br>
 
 <img src="./assets/toolbox.svg" width="100%" alt="Muhammad Usman developer toolbox">
+<h2>~/ Skill radar</h2>
 <br>
 
 <img src="./assets/skill-radar.svg" width="100%" alt="Muhammad Usman skill radar">
