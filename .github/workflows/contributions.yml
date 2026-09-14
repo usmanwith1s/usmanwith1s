@@ -1,6 +1,6 @@
 name: Generate Contribution 3D
 
-on:
+"on":
   schedule:
     - cron: "30 0 * * *"
   workflow_dispatch:
