@@ -48,6 +48,9 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 <img src="./assets/github-contribution-grid-snake.svg" width="100%" alt="Muhammad Usman GitHub contribution snake">
 
 <br>
+<br>
+
+<img src="./assets/profile-numbers.svg" width="100%" alt="Muhammad Usman GitHub profile numbers">
 
 </div>
 
