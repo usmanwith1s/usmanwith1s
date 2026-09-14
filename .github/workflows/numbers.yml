@@ -1,0 +1,160 @@
+name: Generate Profile Numbers
+
+"on":
+  schedule:
+    - cron: "15 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-profile-numbers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Generate numbers SVG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          username = "usmanwith1s"
+
+          query = """
+          query($login: String!) {
+            user(login: $login) {
+              followers { totalCount }
+              following { totalCount }
+              repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
+                totalCount
+                nodes { primaryLanguage { name } }
+              }
+              contributionsCollection {
+                contributionCalendar { totalContributions }
+              }
+            }
+          }
+          """
+
+          payload = json.dumps({
+              "query": query,
+              "variables": {"login": username}
+          }).encode("utf-8")
+
+          request = urllib.request.Request(
+              "https://api.github.com/graphql",
+              data=payload,
+              headers={
+                  "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+                  "Content-Type": "application/json",
+                  "User-Agent": "usmanwith1s-profile-numbers"
+              },
+              method="POST"
+          )
+
+          with urllib.request.urlopen(request) as response:
+              result = json.loads(response.read().decode("utf-8"))
+
+          if "errors" in result:
+              raise RuntimeError("GitHub GraphQL error: " + json.dumps(result["errors"]))
+
+          user = result.get("data", {}).get("user")
+          if not user:
+              raise RuntimeError(f"Could not find GitHub user: {username}")
+
+          total_repositories = user["repositories"]["totalCount"]
+          followers = user["followers"]["totalCount"]
+          following = user["following"]["totalCount"]
+          contributions = user["contributionsCollection"]["contributionCalendar"]["totalContributions"]
+
+          language_counts = {}
+          for repo in user["repositories"]["nodes"]:
+              language = repo.get("primaryLanguage")
+              if language and language.get("name"):
+                  name = language["name"]
+                  language_counts[name] = language_counts.get(name, 0) + 1
+
+          top_languages = sorted(language_counts.items(), key=lambda item: item[1], reverse=True)[:5]
+          while len(top_languages) < 5:
+              top_languages.append(("-", 0))
+
+          max_language_count = max([count for _, count in top_languages] + [1])
+
+          width = 1200
+          height = 430
+
+          svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
+          <rect width="{width}" height="{height}" rx="28" fill="#0b0b0b" stroke="#252525" stroke-width="2"/>
+          <rect width="{width}" height="62" rx="28" fill="#111111"/>
+          <rect y="38" width="{width}" height="24" fill="#111111"/>
+
+          <circle cx="30" cy="31" r="7" fill="#ff5f56"/>
+          <circle cx="54" cy="31" r="7" fill="#ffbd2e"/>
+          <circle cx="78" cy="31" r="7" fill="#27c93f"/>
+
+          <text x="600" y="38" text-anchor="middle" fill="#777777" font-family="monospace" font-size="15">~/ the numbers</text>
+
+          <text x="32" y="103" fill="#9cff00" font-family="monospace" font-size="15">usman@github:~$ github --stats</text>
+          <text x="32" y="143" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">The Numbers</text>
+          <text x="32" y="168" fill="#777777" font-family="monospace" font-size="11">REAL GITHUB DATA · AUTO UPDATED</text>
+
+          <rect x="32" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
+          <text x="55" y="223" fill="#4285f4" font-family="Arial, sans-serif" font-size="13" font-weight="700">REPOSITORIES</text>
+          <text x="55" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">{total_repositories}</text>
+
+          <rect x="293" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
+          <text x="316" y="223" fill="#9cff00" font-family="Arial, sans-serif" font-size="13" font-weight="700">CONTRIBUTIONS</text>
+          <text x="316" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">{contributions}</text>
+
+          <rect x="554" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
+          <text x="577" y="223" fill="#ff007f" font-family="Arial, sans-serif" font-size="13" font-weight="700">FOLLOWERS</text>
+          <text x="577" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">{followers}</text>
+
+          <rect x="815" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
+          <text x="838" y="223" fill="#f7df1e" font-family="Arial, sans-serif" font-size="13" font-weight="700">FOLLOWING</text>
+          <text x="838" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">{following}</text>
+
+          <text x="32" y="328" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="700">PRIMARY LANGUAGES · OWN REPOSITORIES</text>
+          '''
+
+          language_colors = ["#5382a1", "#e34f26", "#1572b6", "#f7df1e", "#3776ab"]
+          bar_start = 175
+          bar_max = 300
+
+          for index, (name, count) in enumerate(top_languages):
+              color = language_colors[index]
+              yy = 350 + index * 15
+              label = "—" if name == "-" else name.upper()
+              bar_width = 0 if count == 0 else int(bar_max * count / max_language_count)
+
+              svg += f'''\n          <text x="32" y="{yy + 9}" fill="#777777" font-family="monospace" font-size="9">{label}</text>
+          <rect x="{bar_start}" y="{yy}" width="{bar_max}" height="8" rx="4" fill="#161616"/>
+          <rect x="{bar_start}" y="{yy}" width="{bar_width}" height="8" rx="4" fill="{color}"/>
+          <text x="487" y="{yy + 9}" fill="#777777" font-family="monospace" font-size="9">{count}</text>\n'''
+
+          svg += '''
+          <text x="1150" y="408" text-anchor="end" fill="#555555" font-family="monospace" font-size="10">sourced directly from GitHub</text>
+          </svg>
+          '''
+
+          output = Path("assets/profile-numbers.svg")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(svg, encoding="utf-8")
+          print(f"Generated {output}")
+          PY
+
+      - name: Commit profile numbers
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/profile-numbers.svg
+          git diff --cached --quiet || git commit -m "Update profile numbers"
+          git push
