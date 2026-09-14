@@ -1,0 +1,136 @@
+<svg width="1000" height="430" viewBox="0 0 1000 430"
+xmlns="http://www.w3.org/2000/svg">
+
+<rect width="1000" height="430" rx="24"
+      fill="#0b0b0b"
+      stroke="#252525"
+      stroke-width="2"/>
+
+<!-- Terminal header -->
+<rect width="1000" height="58" rx="24" fill="#111111"/>
+<rect y="34" width="1000" height="24" fill="#111111"/>
+
+<circle cx="28" cy="29" r="7" fill="#ff5f56"/>
+<circle cx="52" cy="29" r="7" fill="#ffbd2e"/>
+<circle cx="76" cy="29" r="7" fill="#27c93f"/>
+
+<text x="500" y="35"
+      text-anchor="middle"
+      fill="#777777"
+      font-family="monospace"
+      font-size="15">
+    ~/ whoami
+</text>
+
+<!-- Main prompt -->
+<text x="48" y="105"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="17">
+    usman@github:~$
+</text>
+
+<text x="215" y="105"
+      fill="#ffffff"
+      font-family="monospace"
+      font-size="17">
+    whoami
+</text>
+
+<!-- Identity -->
+<text x="48" y="155"
+      fill="#ffffff"
+      font-family="Arial, sans-serif"
+      font-size="30"
+      font-weight="700">
+    Muhammad Usman
+</text>
+
+<text x="48" y="187"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="16">
+    Software Engineering Student
+</text>
+
+<!-- Divider -->
+<line x1="48" y1="215" x2="952" y2="215"
+      stroke="#252525" stroke-width="1"/>
+
+<!-- Left column -->
+<text x="48" y="255"
+      fill="#777777"
+      font-family="monospace"
+      font-size="14">
+    ROLE
+</text>
+
+<text x="48" y="281"
+      fill="#ffffff"
+      font-family="monospace"
+      font-size="16">
+    Java Developer
+</text>
+
+<text x="48" y="307"
+      fill="#ffffff"
+      font-family="monospace"
+      font-size="16">
+    Web Developer
+</text>
+
+<text x="48" y="333"
+      fill="#ffffff"
+      font-family="monospace"
+      font-size="16">
+    Game Development
+</text>
+
+<!-- Right column -->
+<text x="520" y="255"
+      fill="#777777"
+      font-family="monospace"
+      font-size="14">
+    CURRENTLY BUILDING
+</text>
+
+<text x="520" y="281"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="16">
+    &gt; GameHub
+</text>
+
+<text x="520" y="307"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="16">
+    &gt; Hand Survivor
+</text>
+
+<text x="520" y="333"
+      fill="#9cff00"
+      font-family="monospace"
+      font-size="16">
+    &gt; Personal Portfolio
+</text>
+
+<!-- Bottom prompt -->
+<text x="48" y="386"
+      fill="#777777"
+      font-family="monospace"
+      font-size="14">
+    usman@github:~$
+</text>
+
+<text x="190" y="386"
+      fill="#ffffff"
+      font-family="monospace"
+      font-size="14">
+    building what's next...
+</text>
+
+<rect x="370" y="373" width="8" height="17"
+      fill="#9cff00"/>
+
+</svg>
