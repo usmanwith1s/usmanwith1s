@@ -25,6 +25,26 @@
 </a>
 &nbsp;
 <a href="https://github.com/usmanwith1s">
+  <br>
+
+<div align="center">
+
+## `~/ whoami`
+
+</div>
+
+<table>
+<tr>
+<td width="55%" valign="top">
+
+### `$ get a notbox`
+
+```text
+Muhammad Usman
+Software Engineering Student
+Java Developer
+Web Developer
+Game Development Enthusiast
   <img src="https://img.shields.io/badge/🐙%20GITHUB-000000?style=for-the-badge&labelColor=000000&color=9cff00" alt="GitHub">
 </a>
 
