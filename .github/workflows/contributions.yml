@@ -158,6 +158,98 @@ jobs:
           print("========================================")
 
           # =========================================================
+          # GENERATE NORMAL GITHUB-STYLE CONTRIBUTION CALENDAR
+          # =========================================================
+
+          from datetime import date, timedelta
+
+          calendar_width = 1200
+          calendar_height = 250
+          cal_x = 110
+          cal_y = 92
+          cell = 13
+          gap = 4
+
+          calendar_colors = {
+              "NONE": "#161b22",
+              "FIRST_QUARTILE": "#0e4429",
+              "SECOND_QUARTILE": "#006d32",
+              "THIRD_QUARTILE": "#26a641",
+              "FOURTH_QUARTILE": "#39d353"
+          }
+
+          start_date = date.fromisoformat(days[0]["date"])
+          end_date = date.fromisoformat(days[-1]["date"])
+
+          # GitHub weeks run Sunday -> Saturday.
+          calendar_start = start_date - timedelta(days=(start_date.weekday() + 1) % 7)
+          calendar_end = end_date + timedelta(days=6 - ((end_date.weekday() + 1) % 7))
+
+          day_map = {day["date"]: day for day in days}
+          calendar_days = []
+          cursor = calendar_start
+          while cursor <= calendar_end:
+              calendar_days.append(cursor)
+              cursor += timedelta(days=1)
+
+          calendar_cols = len(calendar_days) // 7
+
+          calendar_svg = f'''<svg width="{calendar_width}" height="{calendar_height}" viewBox="0 0 {calendar_width} {calendar_height}" xmlns="http://www.w3.org/2000/svg">
+          <rect width="{calendar_width}" height="{calendar_height}" rx="24" fill="#0b0b0b" stroke="#252525" stroke-width="2"/>
+
+          <text x="32" y="34" fill="#9cff00" font-family="monospace" font-size="14">~/ contributions --calendar</text>
+          <text x="32" y="62" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="700">Contribution Activity</text>
+          <text x="32" y="82" fill="#777777" font-family="monospace" font-size="10">REAL GITHUB CONTRIBUTIONS · LAST 365 DAYS</text>
+
+          <text x="82" y="{cal_y + 11}" fill="#777777" font-family="Arial, sans-serif" font-size="9" text-anchor="end">MON</text>
+          <text x="82" y="{cal_y + 32}" fill="#777777" font-family="Arial, sans-serif" font-size="9" text-anchor="end">WED</text>
+          <text x="82" y="{cal_y + 53}" fill="#777777" font-family="Arial, sans-serif" font-size="9" text-anchor="end">FRI</text>
+          '''
+
+          previous_month = None
+          for col in range(calendar_cols):
+              week_start = calendar_days[col * 7]
+              month_key = (week_start.year, week_start.month)
+              if month_key != previous_month:
+                  calendar_svg += f'''
+          <text x="{cal_x + col * (cell + gap)}" y="{cal_y - 10}" fill="#777777" font-family="Arial, sans-serif" font-size="10">{week_start.strftime("%b").upper()}</text>
+                  '''
+                  previous_month = month_key
+
+          for index, current_date in enumerate(calendar_days):
+              col = index // 7
+              row = index % 7
+              day = day_map.get(current_date.isoformat())
+              level = day["level"] if day else "NONE"
+              x = cal_x + col * (cell + gap)
+              y = cal_y + row * (cell + gap)
+              calendar_svg += f'''
+          <rect x="{x}" y="{y}" width="{cell}" height="{cell}" rx="3" fill="{calendar_colors[level]}"/>
+              '''
+
+          legend_y = 215
+          calendar_svg += f'''
+          <text x="860" y="{legend_y + 10}" fill="#777777" font-family="Arial, sans-serif" font-size="10">LESS</text>
+          '''
+
+          for i, level in enumerate(["NONE", "FIRST_QUARTILE", "SECOND_QUARTILE", "THIRD_QUARTILE", "FOURTH_QUARTILE"]):
+              x = 900 + i * 20
+              calendar_svg += f'''
+          <rect x="{x}" y="{legend_y}" width="12" height="12" rx="3" fill="{calendar_colors[level]}"/>
+              '''
+
+          calendar_svg += f'''
+          <text x="1010" y="{legend_y + 10}" fill="#777777" font-family="Arial, sans-serif" font-size="10">MORE</text>
+          <text x="32" y="238" fill="#555555" font-family="monospace" font-size="10">{total_contributions} contributions · sourced directly from GitHub</text>
+          </svg>
+          '''
+
+          calendar_output = Path("assets/contributions-calendar.svg")
+          calendar_output.parent.mkdir(parents=True, exist_ok=True)
+          calendar_output.write_text(calendar_svg, encoding="utf-8")
+          print(f"Generated {calendar_output}")
+
+          # =========================================================
           # SVG SETTINGS
           # =========================================================
 
@@ -523,9 +615,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add assets/contributions-3d.svg
+          git add assets/contributions-3d.svg assets/contributions-calendar.svg
 
           git diff --cached --quiet || \
-            git commit -m "Update contribution 3D visualization"
+            git commit -m "Update contribution visualizations"
 
           git push
