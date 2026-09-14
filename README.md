@@ -39,9 +39,6 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 
 <img src="./assets/contributions-3d.svg" width="100%" alt="Muhammad Usman 3D GitHub contribution activity">
 
-<br>
-
-<img src="./assets/contributions-calendar.svg" width="100%" alt="Muhammad Usman GitHub contribution calendar">
 
 <br>
 
