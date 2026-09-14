@@ -30,6 +30,9 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 <br>
 
 <img src="./assets/toolbox.svg" width="100%" alt="Muhammad Usman developer toolbox">
+<br>
+
+<img src="./assets/skill-radar.svg" width="100%" alt="Muhammad Usman skill radar">
 
 </div>
 
