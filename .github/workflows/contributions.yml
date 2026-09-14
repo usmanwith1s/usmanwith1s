@@ -17,53 +17,108 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate 3D contribution SVG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 - <<'PY'
-          import html
-          import re
+          import json
           import urllib.request
           from pathlib import Path
 
           username = "usmanwith1s"
 
-          url = f"https://github.com/{username}"
+          query = """
+          query($login: String!) {
+            user(login: $login) {
+              contributionsCollection {
+                contributionCalendar {
+                  totalContributions
+                  weeks {
+                    contributionDays {
+                      date
+                      contributionCount
+                      contributionLevel
+                    }
+                  }
+                }
+              }
+            }
+          }
+          """
+
+          payload = json.dumps({
+              "query": query,
+              "variables": {
+                  "login": username
+              }
+          }).encode("utf-8")
 
           request = urllib.request.Request(
-              url,
+              "https://api.github.com/graphql",
+              data=payload,
               headers={
-                  "User-Agent": "Mozilla/5.0"
-              }
+                  "Authorization": f"Bearer {__import__('os').environ['GITHUB_TOKEN']}",
+                  "Content-Type": "application/json",
+                  "User-Agent": "usmanwith1s-contribution-generator"
+              },
+              method="POST"
           )
 
-          page = urllib.request.urlopen(request).read().decode("utf-8")
+          with urllib.request.urlopen(request) as response:
+              result = json.loads(response.read().decode("utf-8"))
 
-          matches = re.findall(
-              r'<td[^>]*data-date="([^"]+)"[^>]*data-level="(\d+)"',
-              page
-          )
-
-          if not matches:
+          if "errors" in result:
               raise RuntimeError(
-                  "Could not find GitHub contribution data."
+                  "GitHub GraphQL error: "
+                  + json.dumps(result["errors"])
               )
 
-          # Keep the latest 365 contribution days.
-          matches = matches[-365:]
+          user = result.get("data", {}).get("user")
 
-          values = [
-              (date, int(level))
-              for date, level in matches
-          ]
+          if not user:
+              raise RuntimeError(
+                  f"Could not find GitHub user: {username}"
+              )
+
+          calendar = user["contributionsCollection"]["contributionCalendar"]
+
+          total = calendar["totalContributions"]
+
+          values = []
+
+          for week in calendar["weeks"]:
+              for day in week["contributionDays"]:
+                  values.append((
+                      day["date"],
+                      day["contributionCount"],
+                      day["contributionLevel"]
+                  ))
+
+          # Keep the latest 365 days.
+          values = values[-365:]
+
+          if not values:
+              raise RuntimeError(
+                  "GitHub returned no contribution data."
+              )
+
+          print(
+              f"Found {len(values)} contribution days."
+          )
+
+          print(
+              f"Total contributions: {total}"
+          )
 
           width = 1200
           height = 620
 
-          # Isometric-style projection.
           cols = 53
           rows = 7
 
           cell_w = 17
           cell_d = 9
+
           base_x = 180
           base_y = 420
 
@@ -76,12 +131,21 @@ jobs:
 
           def level_height(level):
               return {
-                  0: 2,
-                  1: 18,
-                  2: 40,
-                  3: 68,
-                  4: 100
+                  "NONE": 2,
+                  "FIRST_QUARTILE": 18,
+                  "SECOND_QUARTILE": 40,
+                  "THIRD_QUARTILE": 68,
+                  "FOURTH_QUARTILE": 100
               }.get(level, 2)
+
+          def level_color(level):
+              return {
+                  "NONE": "#161616",
+                  "FIRST_QUARTILE": "#365f12",
+                  "SECOND_QUARTILE": "#5f941b",
+                  "THIRD_QUARTILE": "#82c72a",
+                  "FOURTH_QUARTILE": "#9cff00"
+              }.get(level, "#161616")
 
           svg = f'''<svg width="{width}" height="{height}"
           viewBox="0 0 {width} {height}"
@@ -164,24 +228,20 @@ jobs:
               '''
 
           # Contribution blocks.
-          for index, (date, level) in enumerate(values):
+          for index, (date, count, level) in enumerate(values):
+
               col = index // rows
               row = index % rows
 
               height_value = level_height(level)
 
-              x, y = project(col, row, height_value)
+              x, y = project(
+                  col,
+                  row,
+                  height_value
+              )
 
-              if level == 0:
-                  fill = "#161616"
-              elif level == 1:
-                  fill = "#365f12"
-              elif level == 2:
-                  fill = "#5f941b"
-              elif level == 3:
-                  fill = "#82c72a"
-              else:
-                  fill = "#9cff00"
+              fill = level_color(level)
 
               # Front face.
               svg += f'''
@@ -207,22 +267,29 @@ jobs:
               opacity="0.75"/>
               '''
 
-          svg += '''
+          svg += f'''
           <text x="600" y="545"
                 text-anchor="middle"
                 fill="#777777"
                 font-family="monospace"
                 font-size="13">
-              activity intensity · sourced directly from github.com/usmanwith1s
+              {total} contributions · sourced directly from GitHub
           </text>
 
           </svg>
           '''
 
-          output = Path("assets/contributions-3d.svg")
-          output.parent.mkdir(parents=True, exist_ok=True)
+          output = Path(
+              "assets/contributions-3d.svg"
+          )
+
+          output.parent.mkdir(
+              parents=True,
+              exist_ok=True
+          )
+
           output.write_text(
-              html.unescape(svg),
+              svg,
               encoding="utf-8"
           )
 
