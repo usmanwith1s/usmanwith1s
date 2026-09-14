@@ -33,6 +33,9 @@ Software Engineering Student · Java Developer · Web Developer · Game Developm
 <br>
 
 <img src="./assets/skill-radar.svg" width="100%" alt="Muhammad Usman skill radar">
+<br>
+
+<img src="./assets/contributions-3d.svg" width="100%" alt="Muhammad Usman GitHub contribution activity">
 
 </div>
 
