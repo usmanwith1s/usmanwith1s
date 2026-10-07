@@ -23,7 +23,7 @@
 
 <rect x="554" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
 <text x="577" y="223" fill="#ff007f" font-family="Arial, sans-serif" font-size="13" font-weight="700">FOLLOWERS</text>
-<text x="577" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">0</text>
+<text x="577" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">1</text>
 
 <rect x="815" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
 <text x="838" y="223" fill="#f7df1e" font-family="Arial, sans-serif" font-size="13" font-weight="700">FOLLOWING</text>
