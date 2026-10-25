@@ -15,11 +15,11 @@
 
 <rect x="32" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
 <text x="55" y="223" fill="#4285f4" font-family="Arial, sans-serif" font-size="13" font-weight="700">REPOSITORIES</text>
-<text x="55" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">11</text>
+<text x="55" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">12</text>
 
 <rect x="293" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
 <text x="316" y="223" fill="#9cff00" font-family="Arial, sans-serif" font-size="13" font-weight="700">CONTRIBUTIONS</text>
-<text x="316" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">446</text>
+<text x="316" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">448</text>
 
 <rect x="554" y="195" width="245" height="92" rx="14" fill="#111111" stroke="#252525"/>
 <text x="577" y="223" fill="#ff007f" font-family="Arial, sans-serif" font-size="13" font-weight="700">FOLLOWERS</text>
@@ -51,10 +51,10 @@
 <rect x="175" y="395" width="75" height="8" rx="4" fill="#f7df1e"/>
 <text x="487" y="404" fill="#777777" font-family="monospace" font-size="9">1</text>
 
-          <text x="32" y="419" fill="#777777" font-family="monospace" font-size="9">—</text>
+          <text x="32" y="419" fill="#777777" font-family="monospace" font-size="9">TYPESCRIPT</text>
 <rect x="175" y="410" width="300" height="8" rx="4" fill="#161616"/>
-<rect x="175" y="410" width="0" height="8" rx="4" fill="#3776ab"/>
-<text x="487" y="419" fill="#777777" font-family="monospace" font-size="9">0</text>
+<rect x="175" y="410" width="75" height="8" rx="4" fill="#3776ab"/>
+<text x="487" y="419" fill="#777777" font-family="monospace" font-size="9">1</text>
 
 <text x="1150" y="408" text-anchor="end" fill="#555555" font-family="monospace" font-size="10">sourced directly from GitHub</text>
 </svg>
